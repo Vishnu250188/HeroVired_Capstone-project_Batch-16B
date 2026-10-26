@@ -21,3 +21,18 @@ crash.*.log
 
 # Local editor files
 .vscode/
+
+# Terraform working files
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+
+# Private Terraform variables
+terraform.tfvars
+**/terraform.tfvars
+
+# Local credentials
+.env
+*.pem
