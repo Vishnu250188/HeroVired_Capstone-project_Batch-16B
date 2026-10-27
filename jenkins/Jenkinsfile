@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+
+    options {
+        timestamps()
+    }
+
+    stages {
+        stage('Checkout Source') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Validate Project Structure') {
+            steps {
+                sh '''
+                    echo "Checking DevOps Capstone project structure..."
+
+                    test -f application/Dockerfile
+                    test -f terraform/provider.tf
+                    test -f kubernetes/deployment.yaml
+
+                    echo "Project structure validation passed."
+                    git rev-parse --short HEAD
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'SUCCESS: Repository checkout and validation completed.'
+        }
+
+        failure {
+            echo 'FAILURE: Check the Jenkins console output.'
+        }
+
+        always {
+            echo 'DevOps Capstone validation pipeline finished.'
+        }
+    }
+}
