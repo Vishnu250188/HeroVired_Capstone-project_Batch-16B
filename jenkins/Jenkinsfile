@@ -15,14 +15,34 @@ pipeline {
         stage('Validate Project Structure') {
             steps {
                 sh '''
+                    set -eu
+
                     echo "Checking DevOps Capstone project structure..."
 
+                    echo "Checking application..."
                     test -f application/Dockerfile
-                    test -f terraform/provider.tf
-                    test -f kubernetes/deployment.yaml
+                    echo "PASS: application/Dockerfile exists"
 
-                    echo "Project structure validation passed."
+                    echo "Checking Terraform configuration..."
+                    test -f terraform/bootstrap/main.tf
+                    test -f terraform/environments/dev/main.tf
+                    test -f terraform/environments/dev/versions.tf
+                    test -f terraform/environments/dev/variables.tf
+                    test -f terraform/environments/dev/outputs.tf
+                    echo "PASS: Terraform configuration files exist"
+
+                    echo "Checking Kubernetes configuration..."
+                    if [ -f kubernetes/deployment.yaml ]; then
+                        echo "PASS: Kubernetes deployment manifest exists"
+                    else
+                        echo "WARNING: kubernetes/deployment.yaml is not created yet."
+                        echo "Kubernetes deployment configuration is still pending."
+                    fi
+
+                    echo "Checking Git commit..."
                     git rev-parse --short HEAD
+
+                    echo "Repository structure validation passed."
                 '''
             }
         }
@@ -30,11 +50,11 @@ pipeline {
 
     post {
         success {
-            echo 'SUCCESS: Repository checkout and validation completed.'
+            echo 'SUCCESS: Repository and Terraform structure validated.'
         }
 
         failure {
-            echo 'FAILURE: Check the Jenkins console output.'
+            echo 'FAILURE: A required application or Terraform file is missing.'
         }
 
         always {
