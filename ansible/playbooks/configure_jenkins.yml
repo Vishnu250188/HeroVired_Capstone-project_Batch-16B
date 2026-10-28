@@ -33,6 +33,7 @@
         cmd: id jenkins
       register: jenkins_user
       changed_when: false
+      failed_when: false
 
     - name: Add Jenkins user to Docker group
       ansible.builtin.user:
