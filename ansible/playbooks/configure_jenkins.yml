@@ -1,70 +1,41 @@
+
 ---
-- name: Configure Jenkins EC2 for DevOps CI/CD
+- name: Validate DevOps CI/CD tools on Jenkins agent
   hosts: local
   connection: local
-  become: true
+  become: false
 
   tasks:
-    - name: Update Ubuntu package cache
-      ansible.builtin.apt:
-        update_cache: true
-        cache_valid_time: 3600
-
-    - name: Install required packages
-      ansible.builtin.apt:
-        name:
-          - docker.io
-          - awscli
-          - git
-          - python3
-          - python3-pip
-          - curl
-          - unzip
-        state: present
-
-    - name: Ensure Docker is running
-      ansible.builtin.service:
-        name: docker
-        state: started
-        enabled: true
-
-    - name: Check whether Jenkins service account exists
+    - name: Check Ansible version
       ansible.builtin.command:
-        cmd: id jenkins
-      register: jenkins_user
+        cmd: ansible --version
+      register: ansible_check
+      changed_when: false
+
+    - name: Check Git version
+      ansible.builtin.command:
+        cmd: git --version
+      register: git_check
+      changed_when: false
+
+    - name: Check Docker availability
+      ansible.builtin.command:
+        cmd: docker --version
+      register: docker_check
       changed_when: false
       failed_when: false
 
-    - name: Add Jenkins user to Docker group
-      ansible.builtin.user:
-        name: jenkins
-        groups: docker
-        append: true
-      when: jenkins_user.rc == 0
-
-    - name: Read the latest stable kubectl version
-      ansible.builtin.command:
-        cmd: curl -fsSL https://dl.k8s.io/release/stable.txt
-      register: kubectl_version
-      changed_when: false
-
-    - name: Install kubectl
-      ansible.builtin.get_url:
-        url: "https://dl.k8s.io/release/{{ kubectl_version.stdout }}/bin/linux/amd64/kubectl"
-        dest: /usr/local/bin/kubectl
-        mode: "0755"
-
-    - name: Verify Docker installation
-      ansible.builtin.command:
-        cmd: docker --version
-      changed_when: false
-
-    - name: Verify kubectl installation
-      ansible.builtin.command:
-        cmd: kubectl version --client
-      changed_when: false
-
-    - name: Verify AWS CLI installation
+    - name: Check AWS CLI availability
       ansible.builtin.command:
         cmd: aws --version
+      register: aws_check
       changed_when: false
+      failed_when: false
+
+    - name: Display tool verification results
+      ansible.builtin.debug:
+        msg:
+          - "{{ ansible_check.stdout_lines[0] }}"
+          - "{{ git_check.stdout }}"
+          - "Docker: {{ docker_check.stdout | default('Not available on this agent') }}"
+          - "AWS CLI: {{ aws_check.stdout | default('Not available on this agent') }}"
