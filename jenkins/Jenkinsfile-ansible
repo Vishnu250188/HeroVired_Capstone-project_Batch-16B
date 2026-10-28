@@ -1,0 +1,52 @@
+pipeline {
+    agent any
+
+    options {
+        timestamps()
+        disableConcurrentBuilds()
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Check Ansible') {
+            steps {
+                sh 'ansible --version'
+            }
+        }
+
+        stage('Validate Playbook') {
+            steps {
+                sh '''
+                    ansible-playbook \
+                      -i ansible/inventory/hosts.ini \
+                      ansible/playbooks/configure_jenkins.yml \
+                      --syntax-check
+                '''
+            }
+        }
+
+        stage('Configure Jenkins EC2') {
+            steps {
+                sh '''
+                    ansible-playbook \
+                      -i ansible/inventory/hosts.ini \
+                      ansible/playbooks/configure_jenkins.yml
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Sprint 3 Ansible configuration completed.'
+        }
+        failure {
+            echo 'Ansible failed. Review the Console Output.'
+        }
+    }
+}
