@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -16,7 +15,6 @@ pipeline {
     }
 
     stages {
-
         stage('Checkout') {
             steps {
                 checkout scm
@@ -27,7 +25,6 @@ pipeline {
             steps {
                 sh '''
                     set -eu
-
                     git --version
                     python3 --version
                     docker --version
@@ -37,28 +34,18 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
-            steps {
-                sh '''
-                    set -eu
-
-                    python3 -m pip --version
-                    python3 -m pip install --user --upgrade pip
-                    python3 -m pip install --user -r application/requirements.txt
-                '''
-            }
-        }
-
         stage('Test Application') {
             steps {
                 sh '''
                     set -eu
+                    echo "Running tests inside Python Docker container"
+
                     docker run --rm \
-                        -v "$WORKSPACE/application:/app" \
-                        -w /app \
-                        python:3.12-slim \
-                        sh -c "pip install --no-cache-dir -r requirements.txt && python -m unittest discover -s tests -v"
-                  '''
+                      -v "$WORKSPACE/application:/app" \
+                      -w /app \
+                      python:3.12-slim \
+                      sh -c "pip install --no-cache-dir -r requirements.txt && python -m unittest discover -s tests -v"
+                '''
             }
         }
 
@@ -66,10 +53,9 @@ pipeline {
             steps {
                 sh '''
                     set -eu
-
                     docker build \
-                        -t "$ECR_REPOSITORY:$BUILD_NUMBER" \
-                        application
+                      -t "$ECR_REPOSITORY:$BUILD_NUMBER" \
+                      application
                 '''
             }
         }
@@ -78,21 +64,20 @@ pipeline {
             steps {
                 sh '''
                     set -eu
-
                     aws sts get-caller-identity
 
                     aws ecr get-login-password \
-                        --region "$AWS_DEFAULT_REGION" |
-                        docker login \
-                            --username AWS \
-                            --password-stdin "$ECR_REGISTRY"
+                      --region "$AWS_DEFAULT_REGION" |
+                      docker login \
+                        --username AWS \
+                        --password-stdin "$ECR_REGISTRY"
 
                     docker tag \
-                        "$ECR_REPOSITORY:$BUILD_NUMBER" \
-                        "$ECR_REGISTRY/$ECR_REPOSITORY:$BUILD_NUMBER"
+                      "$ECR_REPOSITORY:$BUILD_NUMBER" \
+                      "$ECR_REGISTRY/$ECR_REPOSITORY:$BUILD_NUMBER"
 
                     docker push \
-                        "$ECR_REGISTRY/$ECR_REPOSITORY:$BUILD_NUMBER"
+                      "$ECR_REGISTRY/$ECR_REPOSITORY:$BUILD_NUMBER"
                 '''
             }
         }
@@ -103,8 +88,8 @@ pipeline {
                     set -eu
 
                     aws eks update-kubeconfig \
-                        --name "$EKS_CLUSTER_NAME" \
-                        --region "$AWS_DEFAULT_REGION"
+                      --name "$EKS_CLUSTER_NAME" \
+                      --region "$AWS_DEFAULT_REGION"
 
                     kubectl get nodes
                 '''
@@ -117,27 +102,23 @@ pipeline {
                     set -eu
 
                     kubectl create namespace "$K8S_NAMESPACE" \
-                        --dry-run=client -o yaml |
-                        kubectl apply -f -
+                      --dry-run=client -o yaml |
+                      kubectl apply -f -
 
                     sed "s|REPLACE_WITH_ECR_IMAGE_URI|$ECR_REGISTRY/$ECR_REPOSITORY:$BUILD_NUMBER|g" \
-                        kubernetes/deployment.yaml \
-                        > deployment-rendered.yaml
+                      kubernetes/deployment.yaml \
+                      > deployment-rendered.yaml
 
                     kubectl apply -f deployment-rendered.yaml
-
                     kubectl apply -f kubernetes/service.yaml
 
                     kubectl rollout status \
-                        deployment/devops-capstone-app \
-                        -n "$K8S_NAMESPACE" \
-                        --timeout=180s
+                      deployment/devops-capstone-app \
+                      -n "$K8S_NAMESPACE" \
+                      --timeout=180s
 
-                    kubectl get pods \
-                        -n "$K8S_NAMESPACE"
-
-                    kubectl get services \
-                        -n "$K8S_NAMESPACE"
+                    kubectl get pods -n "$K8S_NAMESPACE"
+                    kubectl get services -n "$K8S_NAMESPACE"
                 '''
             }
         }
@@ -145,11 +126,11 @@ pipeline {
 
     post {
         success {
-            echo 'Sprint 4 application deployment completed.'
+            echo 'Sprint 4 pipeline completed successfully.'
         }
 
         failure {
-            echo 'Pipeline failed. Review the failed stage in Console Output.'
+            echo 'Pipeline failed. Review the first failing stage in Console Output.'
         }
 
         always {
