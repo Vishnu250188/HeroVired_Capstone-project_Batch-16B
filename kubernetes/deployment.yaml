@@ -1,5 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: devops-capstone-app
   namespace: capstone
@@ -21,7 +22,7 @@ spec:
     spec:
       containers:
         - name: web
-          image: 579421471786.dkr.ecr.ap-south-1.amazonaws.com/devops-capstone-app:1.0
+          image: REPLACE_WITH_ECR_IMAGE_URI
           imagePullPolicy: Always
 
           ports:
