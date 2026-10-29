@@ -1,0 +1,136 @@
+pipeline {
+    agent any
+
+    options {
+        timestamps()
+        disableConcurrentBuilds()
+    }
+
+    environment {
+        AWS_DEFAULT_REGION = 'ap-south-1'
+        ECR_REGISTRY = '579421471786.dkr.ecr.ap-south-1.amazonaws.com'
+        ECR_REPOSITORY = 'devops-capstone-app'
+        EKS_CLUSTER_NAME = 'devops-capstone-dev'
+        K8S_NAMESPACE = 'capstone'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Check Agent Tools') {
+            steps {
+                sh '''
+                    set -eu
+                    git --version
+                    python3 --version
+                    docker --version
+                    aws --version
+                    kubectl version --client
+                '''
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                    set -eu
+                    python3 -m venv .venv
+                    .venv/bin/python -m pip install -r application/requirements.txt
+                '''
+            }
+        }
+
+        stage('Test Application') {
+            steps {
+                sh '''
+                    set -eu
+                    .venv/bin/python -m unittest discover \
+                      -s application/tests -v
+                '''
+            }
+        }
+
+        stage('Build Image') {
+            steps {
+                sh '''
+                    set -eu
+                    docker build \
+                      -t "$ECR_REPOSITORY:$BUILD_NUMBER" \
+                      application
+                '''
+            }
+        }
+
+        stage('Push Image to ECR') {
+            steps {
+                sh '''
+                    set -eu
+                    aws sts get-caller-identity
+
+                    aws ecr get-login-password \
+                      --region "$AWS_DEFAULT_REGION" |
+                      docker login --username AWS \
+                        --password-stdin "$ECR_REGISTRY"
+
+                    docker tag "$ECR_REPOSITORY:$BUILD_NUMBER" \
+                      "$ECR_REGISTRY/$ECR_REPOSITORY:$BUILD_NUMBER"
+
+                    docker push \
+                      "$ECR_REGISTRY/$ECR_REPOSITORY:$BUILD_NUMBER"
+                '''
+            }
+        }
+
+        stage('Check EKS Access') {
+            steps {
+                sh '''
+                    set -eu
+                    aws eks update-kubeconfig \
+                      --name "$EKS_CLUSTER_NAME" \
+                      --region "$AWS_DEFAULT_REGION"
+
+                    kubectl get nodes
+                '''
+            }
+        }
+
+        stage('Deploy Application') {
+            steps {
+                sh '''
+                    set -eu
+
+                    kubectl create namespace "$K8S_NAMESPACE" \
+                      --dry-run=client -o yaml | kubectl apply -f -
+
+                    sed "s|REPLACE_WITH_ECR_IMAGE_URI|$ECR_REGISTRY/$ECR_REPOSITORY:$BUILD_NUMBER|g" \
+                      kubernetes/deployment.yaml > deployment-rendered.yaml
+
+                    kubectl apply -f deployment-rendered.yaml
+                    kubectl apply -f kubernetes/service.yaml
+
+                    kubectl rollout status deployment/devops-capstone-app \
+                      -n "$K8S_NAMESPACE" --timeout=180s
+
+                    kubectl get pods -n "$K8S_NAMESPACE"
+                    kubectl get services -n "$K8S_NAMESPACE"
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Sprint 4 application deployment completed.'
+        }
+        failure {
+            echo 'Pipeline failed. Review the failed stage in Console Output.'
+        }
+        always {
+            echo 'Sprint 4 pipeline finished.'
+        }
+    }
+}
