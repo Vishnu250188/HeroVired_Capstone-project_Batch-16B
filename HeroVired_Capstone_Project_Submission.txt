@@ -1,0 +1,381 @@
+CAPSTONE PROJECT SUBMISSION
+
+Hero Vired – Multi-Cloud Architecture & DevOps Program
+
+Batch: 16-B
+Capstone Group: 5
+
+PROJECT TITLE
+End-to-End DevOps Pipeline for a Web Application with CI/CD
+
+GROUP MEMBERS
+1. Vishnu Ram
+2. Swapnil Shrivastava
+
+GITHUB REPOSITORY
+https://github.com/Vishnu250188/HeroVired_Capstone-project_Batch-16B/tree/master
+
+1. PROJECT OVERVIEW
+
+This project demonstrates the design and implementation of an end-to-end DevOps workflow for a containerized web application deployed on Kubernetes using Amazon Elastic Kubernetes Service (Amazon EKS).
+
+The solution brings together application development, source-code management, automated testing, containerization, infrastructure as code, configuration management, continuous integration and continuous deployment, monitoring, and documentation.
+
+Jenkins is used as the CI/CD orchestrator. Docker is used to package the application into a container image, and Amazon Elastic Container Registry (Amazon ECR) is used as the container image repository. Terraform is used to define and provision AWS infrastructure. Ansible is used for configuration-management tasks where applicable. Kubernetes manifests are used to define application deployment, service exposure, health checks, and scaling. Prometheus and Grafana provide monitoring and visualization where configured.
+
+The project follows the supplied capstone requirements and is organized into six implementation sprints.
+
+2. PROBLEM STATEMENT
+
+DevOps teams need a reliable and repeatable way to build, test, package, and deploy applications. Manual deployment activities can introduce errors, slow down releases, and make environments difficult to reproduce.
+
+This project addresses that challenge by designing a CI/CD workflow in which source-code changes can trigger automated validation and application delivery. Infrastructure is defined as code, application components are packaged as containers, and Kubernetes provides the deployment and orchestration platform on AWS.
+
+The intended outcome is a documented and repeatable pipeline that reduces manual effort, improves consistency, and provides visibility into application and infrastructure health.
+
+3. PROJECT OBJECTIVES
+
+The objectives of the project are:
+
+1. Design an AWS-based application architecture incorporating networking, container orchestration, load balancing, and monitoring.
+2. Use Terraform to define AWS infrastructure, including a VPC, public and private subnets, IAM roles, Amazon ECR, and Amazon EKS.
+3. Use Ansible playbooks to automate applicable server configuration and dependency installation.
+4. Containerize the web application using Docker and store the image in Amazon ECR.
+5. Deploy the application to Kubernetes on Amazon EKS using Kubernetes manifests.
+6. Use Jenkins to orchestrate build, test, image publishing, infrastructure, configuration, and deployment activities as implemented in the pipeline.
+7. Configure health checks, scaling, monitoring, and notifications where included in the implementation.
+8. Perform validation and document the implementation, test results, evidence, and operational steps.
+
+4. TECHNOLOGIES AND TOOLS
+
+Application:
+- Python and Flask (web application)
+- Pytest (automated application tests)
+
+Source control:
+- Git
+- GitHub
+
+Containerization:
+- Docker
+- Amazon Elastic Container Registry (Amazon ECR)
+
+Infrastructure as Code:
+- Terraform
+
+Cloud platform:
+- Amazon Web Services (AWS)
+- Amazon VPC
+- Amazon EC2
+- Amazon EKS
+- Amazon S3
+- AWS Identity and Access Management (IAM)
+
+Configuration management:
+- Ansible
+
+Container orchestration:
+- Kubernetes
+- kubectl
+
+CI/CD:
+- Jenkins
+- Jenkins Pipeline
+- Relevant Jenkins integrations/plugins used by the configured pipeline
+
+Monitoring:
+- Prometheus
+- Grafana
+
+Operating environment and development tools:
+- Windows PowerShell
+- Visual Studio Code
+- Ubuntu/Linux shell where required
+
+Note: Retain only tools and services that were actually used in the final implementation.
+
+5. SOLUTION ARCHITECTURE
+
+The high-level workflow is:
+
+Developer
+   |
+   v
+GitHub repository
+   |
+   v
+Jenkins pipeline
+   |
+   +--> Checkout source code
+   |
+   +--> Install dependencies and run automated tests
+   |
+   +--> Build Docker image
+   |
+   +--> Scan/validate image, if configured
+   |
+   +--> Authenticate to Amazon ECR and push image
+   |
+   +--> Terraform infrastructure workflow, when required
+   |
+   +--> Ansible configuration workflow, when required
+   |
+   +--> Connect to Amazon EKS
+   |
+   +--> Apply Kubernetes Deployment and Service manifests
+   |
+   v
+Application running on Kubernetes / Amazon EKS
+   |
+   +--> Health checks and scaling
+   |
+   +--> Prometheus metrics collection
+   |
+   +--> Grafana dashboards and alerts, when configured
+
+AWS infrastructure includes the VPC, subnets, routing, IAM roles, ECR repository, EKS cluster, and supporting resources defined in the Terraform configuration.
+
+6. IMPLEMENTATION APPROACH – SPRINT-WISE SUMMARY
+
+SPRINT 1 – APPLICATION, ARCHITECTURE DESIGN, AND CONTAINERIZATION
+
+Activities:
+- Reviewed the project requirements and designed the proposed AWS and CI/CD architecture.
+- Created the project repository and organized the application, Terraform, Ansible, Kubernetes, Jenkins, monitoring, screenshots, and documentation directories.
+- Developed the sample web application.
+- Added application endpoints and automated test cases.
+- Created the Dockerfile and Docker ignore configuration.
+- Built and tested the Docker image locally.
+- Captured screenshots as implementation evidence.
+
+Outcome:
+The application source code, tests, and Docker configuration were prepared as the foundation for the CI/CD workflow.
+
+SPRINT 2 – AWS INFRASTRUCTURE WITH TERRAFORM
+
+Activities:
+- Prepared Terraform configuration for AWS provider settings and project variables.
+- Defined networking resources, including the VPC, public and private subnets, Internet Gateway, route tables, and NAT Gateway, as applicable to the final configuration.
+- Defined IAM roles and policies required by AWS services.
+- Prepared the Amazon ECR repository configuration.
+- Prepared the Amazon EKS cluster and managed node-group configuration.
+- Configured an Amazon S3 backend for Terraform state, including state protection settings such as versioning and encryption.
+- Validated Terraform formatting and configuration and reviewed the execution plan before provisioning.
+
+Outcome:
+Terraform configuration and state-management setup were prepared to make infrastructure provisioning repeatable. Actual resource creation should be described as completed only where supported by AWS console or CLI evidence.
+
+SPRINT 3 – CONFIGURATION MANAGEMENT WITH ANSIBLE
+
+Activities:
+- Organized Ansible inventory, playbooks, and role structure.
+- Prepared playbooks for the required server configuration and dependency installation.
+- Configured the required connectivity and permissions for the target AWS resources.
+- Executed and validated the playbooks against the intended target systems.
+- Integrated the Ansible execution into the Jenkins workflow where implemented.
+
+Outcome:
+The configuration-management workflow was prepared to reduce manual server setup and improve consistency.
+
+SPRINT 4 – CI/CD AND KUBERNETES DEPLOYMENT
+
+Activities:
+- Created or configured the Jenkins pipeline for the application workflow.
+- Connected Jenkins to the GitHub source repository.
+- Configured the required credentials and integrations for AWS, Docker, and Kubernetes.
+- Added stages for source checkout, dependency installation, automated testing, Docker image build, and image publishing to Amazon ECR.
+- Prepared Kubernetes Deployment and Service manifests.
+- Configured application replicas, resource settings, health probes, and autoscaling where implemented.
+- Configured Jenkins to deploy the application to Amazon EKS.
+- Validated the deployed application using the available application endpoint and health endpoint.
+
+Outcome:
+The CI/CD workflow was designed to automate application validation, container image publishing, and Kubernetes deployment. Include the actual Jenkins build number, EKS cluster name, and application URL in the final report if available.
+
+SPRINT 5 – MONITORING AND ALERTING
+
+Activities:
+- Prepared the monitoring configuration for Prometheus and Grafana.
+- Configured metric collection for the application and/or cluster components where supported.
+- Prepared dashboards to visualize application and infrastructure metrics.
+- Defined alert rules for selected conditions where implemented.
+- Configured Jenkins notifications or alert integration where implemented.
+- Tested the monitoring and alerting workflow.
+
+Outcome:
+The monitoring solution provides visibility into application and infrastructure health for the components that were successfully configured.
+
+SPRINT 6 – TESTING, DOCUMENTATION, AND FINAL VALIDATION
+
+Activities:
+- Reviewed application test cases and test results.
+- Validated the Docker image and container behavior.
+- Reviewed Terraform formatting, validation, and plan output.
+- Validated Ansible playbooks and configuration results where applicable.
+- Tested the Jenkins pipeline stages and deployment workflow.
+- Checked Kubernetes workload status, service availability, and application health.
+- Reviewed monitoring dashboards and alerts where configured.
+- Collected screenshots and prepared project documentation.
+- Reviewed repository contents and committed the project files to GitHub.
+
+Outcome:
+The project implementation and supporting documentation were consolidated for submission. Final completion claims should match the actual test output, Jenkins build history, AWS resources, and screenshots.
+
+7. CI/CD PIPELINE STAGES
+
+The intended Jenkins pipeline consists of the following stages:
+
+1. Source Checkout
+   - Retrieve application source code from the GitHub repository.
+   - Use the configured branch and repository credentials or access method.
+
+2. Build and Dependency Installation
+   - Prepare the build environment.
+   - Install the application dependencies.
+
+3. Automated Testing
+   - Execute the application test suite.
+   - Stop the pipeline if required tests fail.
+
+4. Docker Image Build
+   - Build the container image using the application Dockerfile.
+   - Apply an appropriate image tag.
+
+5. Image Publishing
+   - Authenticate to Amazon ECR.
+   - Push the successfully built image to the configured ECR repository.
+
+6. Infrastructure Provisioning
+   - Run Terraform initialization, validation, planning, and approved provisioning operations.
+   - Store Terraform state remotely in Amazon S3.
+
+7. Configuration Management
+   - Run the required Ansible playbooks against the configured target systems.
+
+8. Kubernetes Deployment
+   - Configure access to the EKS cluster.
+   - Apply Kubernetes manifests.
+   - Wait for the deployment rollout and check workload status.
+
+9. Post-Deployment Validation
+   - Check Kubernetes resources and application health.
+   - Report pipeline success or failure.
+
+10. Monitoring and Notification
+    - Review the configured Prometheus and Grafana monitoring.
+    - Send notifications for configured pipeline or monitoring events.
+
+Note: The final Jenkinsfile may combine, omit, or order some stages differently. The submitted description must reflect the actual Jenkinsfile and build logs.
+
+8. TESTING AND VALIDATION
+
+The following validation areas are relevant to this project. Record the actual result and evidence for each test before submission.
+
+- Application home endpoint: verify that the application returns the expected response.
+- Application health endpoint: verify that the health endpoint returns a healthy response.
+- Automated tests: execute the test suite and record the number of passed and failed tests.
+- Docker build: verify that the Docker image builds successfully.
+- Container runtime: verify that the container starts and the application responds.
+- ECR publishing: verify that the expected image tag is visible in the ECR repository.
+- Terraform validation: verify formatting and configuration validation.
+- Terraform plan: review the resources proposed for creation, modification, or deletion.
+- S3 backend: verify bucket versioning, encryption, and access protection.
+- Ansible: verify playbook execution and target configuration where used.
+- EKS: verify cluster and node-group status where provisioned.
+- Kubernetes: verify Deployment, Pods, Service, and rollout status.
+- Application deployment: access the application through the configured service or load-balancer endpoint.
+- Monitoring: verify that the configured metrics, dashboards, and alerts work.
+
+Test evidence:
+- Store screenshots in the repository's screenshots directory.
+- Include relevant command output, Jenkins console output, AWS resource details, and application responses.
+- Do not include passwords, access keys, private keys, tokens, or other secrets in screenshots or documentation.
+
+9. SECURITY AND COST OPTIMIZATION
+
+Security practices:
+- Use IAM roles and policies with only the permissions required for each task.
+- Avoid hardcoding AWS access keys or passwords in source code and Jenkinsfiles.
+- Store credentials in the approved Jenkins credentials mechanism.
+- Restrict public access to the Kubernetes API endpoint to approved IP addresses.
+- Keep Terraform state in a protected S3 bucket with encryption and versioning.
+- Do not commit Terraform state, plan files, private keys, or secret files to GitHub.
+- Use container image scanning and dependency checks where configured.
+- Use health checks and controlled deployment procedures.
+
+Cost optimization:
+- Select suitable EC2 instance types and node counts for the learning workload.
+- Avoid leaving EKS clusters, EC2 instances, NAT Gateways, load balancers, and other billable resources running when not required.
+- Use an appropriate ECR lifecycle policy to remove old images.
+- Review AWS Cost Explorer and AWS Pricing Calculator estimates.
+- Monitor storage, data transfer, NAT Gateway usage, and load-balancer charges.
+- Destroy temporary resources after testing when they are no longer required, while preserving any resources needed for demonstration or evaluation.
+
+10. PROJECT DELIVERABLES
+
+The repository is intended to contain the following deliverables:
+
+- Application source code and dependency files.
+- Automated application test cases.
+- Dockerfile and Docker ignore configuration.
+- Terraform configuration for AWS infrastructure.
+- Terraform remote-state backend configuration.
+- Ansible inventory, playbooks, and roles.
+- Kubernetes Deployment, Service, and autoscaling manifests.
+- Jenkins pipeline definition.
+- Prometheus and Grafana configuration.
+- Project report and test-case documentation.
+- Sprint-wise screenshots and implementation evidence.
+
+GitHub repository:
+https://github.com/Vishnu250188/HeroVired_Capstone-project_Batch-16B/tree/master
+
+11. CHALLENGES AND TROUBLESHOOTING
+
+During implementation, typical troubleshooting areas included:
+- Ensuring the local project structure and Git repository were correct.
+- Resolving application dependency and Docker build issues.
+- Configuring AWS CLI credentials and the correct AWS region.
+- Validating IAM permissions for Terraform and AWS services.
+- Configuring Terraform remote state and S3 bucket settings.
+- Ensuring Jenkins could access the source repository and locate the Jenkinsfile.
+- Configuring the required AWS and Kubernetes access for deployment.
+- Validating Kubernetes resources and application health.
+- Reviewing monitoring configuration and alert behavior.
+
+For the final submission, add the specific errors encountered, their root causes, and the actual fixes applied. Do not list an issue as resolved unless it was successfully tested.
+
+12. CONCLUSION
+
+This capstone project demonstrates how DevOps practices and tools can be combined to create a repeatable workflow for building, testing, packaging, deploying, and monitoring a containerized web application on AWS.
+
+The project brings together GitHub, Jenkins, Docker, Terraform, Ansible, Amazon ECR, Amazon EKS, Kubernetes, Prometheus, and Grafana as part of an integrated DevOps solution.
+
+The implementation emphasizes automation, infrastructure as code, containerization, controlled deployment, security, monitoring, documentation, and cost awareness. The final level of automation and production readiness is limited to the components that were implemented and successfully validated during the project.
+
+13. EVALUATION CRITERIA
+
+The project is evaluated according to the supplied capstone criteria:
+
+- Documentation: 15%
+- Implementation: 75%
+- Cost Optimization: 10%
+
+14. FINAL SUBMISSION CHECKLIST
+
+Before submitting, confirm the following:
+
+[ ] The GitHub repository is accessible to the evaluator.
+[ ] The correct branch contains the project files.
+[ ] The README and project report describe the actual implementation.
+[ ] The Jenkinsfile is present and matches the demonstrated pipeline.
+[ ] Terraform files are present and validated.
+[ ] Terraform state and secrets are not committed to GitHub.
+[ ] Ansible playbooks and Kubernetes manifests are included where implemented.
+[ ] Application tests and deployment tests have recorded results.
+[ ] Screenshots show the actual implementation and successful outputs.
+[ ] Monitoring evidence is included if Prometheus and Grafana were implemented.
+[ ] AWS cost estimate and cost-control measures are documented.
+[ ] All temporary AWS resources have been reviewed to avoid unexpected charges.
+[ ] Group name, batch, member names, and repository link are correct.
+

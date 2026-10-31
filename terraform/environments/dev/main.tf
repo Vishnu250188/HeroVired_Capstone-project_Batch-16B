@@ -89,12 +89,14 @@ module "eks" {
 
   eks_managed_node_groups = {
     default = {
-      name           = "devops-capstone-workers"
-      instance_types = var.node_instance_types
+      name                     = "instanceRole-Capstone"
+      iam_role_name            = "capstone-workers"
+      iam_role_use_name_prefix = false
+      instance_types           = var.node_instance_types
 
       min_size     = 1
       max_size     = 2
-      desired_size = 1
+      desired_size = 2
 
       capacity_type = "ON_DEMAND"
       disk_size     = 20

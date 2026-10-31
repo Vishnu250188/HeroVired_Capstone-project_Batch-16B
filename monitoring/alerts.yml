@@ -1,0 +1,52 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: capstone-alert-rules
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  groups:
+    - name: capstone-application-alerts
+      rules:
+
+        - alert: ApplicationReplicasUnavailable
+          expr: |
+            kube_deployment_status_replicas_available{
+              namespace="capstone",
+              deployment="devops-capstone-app"
+            } < 1
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: Application replicas unavailable
+            description: The capstone application has no available replicas.
+
+        - alert: HighPodCPUUsage
+          expr: |
+            sum(rate(container_cpu_usage_seconds_total{
+              namespace="capstone",
+              container!="",
+              image!=""
+            }[5m])) by (pod) > 0.8
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: High pod CPU usage
+            description: A capstone application pod is using high CPU.
+
+        - alert: HighPodMemoryUsage
+          expr: |
+            sum(container_memory_working_set_bytes{
+              namespace="capstone",
+              container!="",
+              image!=""
+            }) by (pod) > 536870912
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: High pod memory usage
+            description: A capstone application pod is using more than 512 MiB.

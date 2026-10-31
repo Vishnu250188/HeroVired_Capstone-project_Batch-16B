@@ -1,0 +1,24 @@
+Title : Capstone Projects Submission
+
+Batch: 16-B
+
+Capstone Group : 5
+
+Group Capstone Project Description
+
+This repository contains the Capstone Project completed collaboratively by Group 1 (Batch 14) as part of the HeroVired Multi-Cloud Architecture & DevOps Program.
+
+Our team worked together throughout the project by following the official capstone guidelines, performing all required hands-on practical implementations, and applying DevOps best practices to build a complete end-to-end CI/CD pipeline for a containerized web application on AWS EKS.
+
+The project covers Infrastructure as Code, configuration management, continuous integration and deployment, containerization, Kubernetes orchestration, security scanning, and monitoring using industry-standard DevOps tools.
+
+Group Members:
+
+Vishnu Ram
+Swapnil Shrivastava
+
+Git Repo Link : https://github.com/Vishnu250188/HeroVired_Capstone-project_Batch-16B/tree/master
+
+Project Overview :This project demonstrates a complete DevOps implementation for deploying a containerized web application on AWS EKS using modern DevOps tools and practices.
+
+The solution automates infrastructure provisioning, configuration management, continuous integration, continuous deployment, security scanning, and monitoring
