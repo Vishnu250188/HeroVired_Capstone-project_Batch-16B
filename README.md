@@ -39,20 +39,22 @@ application into a container image.
 Screenshots are stored in the `screenshots` directory.
 
 
+
 # Sprint 1 — Test Cases
 
-| Test ID | Test Description | Expected Result 
+| Test ID | Test Description | Expected Result | Status |
 |---|---|---|---|
-| TC-01 | Run automated home endpoint test | Test passes 
-| TC-02 | Run automated health endpoint test | Test passes 
-| TC-03 | Request the home endpoint locally | HTTP 200 and application message 
-| TC-04 | Request the health endpoint locally | HTTP 200 and healthy status 
-| TC-05 | Build the Docker image | Build succeeds | 
-| TC-06 | Start the Docker container | Container is running |
-| TC-07 | Request the home endpoint in Docker | HTTP 200 and application message |
-| TC-08 | Request the health endpoint in Docker | HTTP 200 and healthy status |
+| TC-01 | Run automated home endpoint test | Test passes | Success |
+| TC-02 | Run automated health endpoint test | Test passes | Success |
+| TC-03 | Request the home endpoint locally | HTTP 200 and application message | Success |
+| TC-04 | Request the health endpoint locally | HTTP 200 and healthy status | Success |
+| TC-05 | Build the Docker image | Build succeeds | Success |
+| TC-06 | Start the Docker container | Container is running | Success |
+| TC-07 | Request the home endpoint in Docker | HTTP 200 and application message | Success |
+| TC-08 | Request the health endpoint in Docker | HTTP 200 and healthy status | Success |
 
 Update each status to `Pass` only after you have verified the corresponding test.
+
 
 
 ### Sprint Outcome
