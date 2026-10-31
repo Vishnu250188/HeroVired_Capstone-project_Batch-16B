@@ -60,3 +60,17 @@ Update each status to `Pass` only after you have verified the corresponding test
 ### Sprint Outcome
 Complete this section after all validation steps succeed.
 Record any issues and their resolutions before closing Sprint 1.
+
+### Sprint 1 checklist 
+
+Project folders match the agreed architecture
+- [ ] Flask application runs locally
+- [ ] Both automated tests pass
+- [ ] Home endpoint returns the expected response
+- [ ] Health endpoint returns healthy status
+- [ ] Docker image builds successfully
+- [ ] Docker container starts successfully
+- [ ] Both endpoints work through Docker
+- [ ] Screenshots are saved in the screenshots folder
+- [ ] Sprint report and test-case documents are saved
+- [ ] Git commit is created
