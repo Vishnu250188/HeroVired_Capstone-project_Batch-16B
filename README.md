@@ -74,3 +74,9 @@ Project folders match the agreed architecture
 - [ ] Screenshots are saved in the screenshots folder
 - [ ] Sprint report and test-case documents are saved
 - [ ] Git commit is created
+
+## Sprint 2 — AWS infrastructure with Terraform
+
+Prepare the Terraform configuration for networking, IAM, ECR and EKS, along with the required state-management setup. We will validate the AWS region, permissions and expected costs before provisioning resources.
+
+The goal for this sprint is to prepare and validate the Terraform configuration for AWS networking, IAM, Amazon ECR, Amazon EKS, and remote Terraform state. We'll validate permissions and estimated costs before creating paid AWS resources.
