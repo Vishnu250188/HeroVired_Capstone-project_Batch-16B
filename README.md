@@ -1,4 +1,5 @@
 # HeroVired_Capstone-project_Batch-16B
+(Note: Please select master branch for project details)
 
 
 # End-to-End DevOps Pipeline for a Web Application with CI/CD
